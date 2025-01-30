@@ -1,4 +1,6 @@
 import random
+# Load spreadsheet
+data = pd.read_excel("sports_betting_data.xlsx")
 
 def simulate_martingale(
     initial_bet=2.50,
