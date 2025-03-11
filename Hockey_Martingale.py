@@ -1,6 +1,13 @@
 import random
-# Load spreadsheet
-data = pd.read_excel("c:\Users\ryanb\Downloads\Hockey Martingale Stats.xlsx")
+import pandas as pd
+
+# Read the main CSV file into a DataFrame
+file_path_main = 'c:/Users/ryanb/Downloads/Hockey_Stats.csv'
+df_main = pd.read_csv(file_path_main)
+
+# Read the betting data CSV file into a DataFrame
+file_path_betting = 'c:/Users/ryanb/Downloads/Hockey_Betting_Data.csv'
+df_betting = pd.read_csv(file_path_betting)
 
 def simulate_martingale(
     initial_bet=2.50,
@@ -38,6 +45,39 @@ def simulate_martingale(
 
     return results
 
-# Run simulation
-simulated_results = simulate_martingale()
-print(simulated_results)
+# Analyze betting data
+def analyze_betting_data(df_betting):
+    # Calculate the average over/under for the first 5 and 10 minutes
+    avg_over_5 = df_betting['Over_5'].mean()
+    avg_under_5 = df_betting['Under_5'].mean()
+    avg_over_10 = df_betting['Over_10'].mean()
+    avg_under_10 = df_betting['Under_10'].mean()
+
+    print(f"Average Over 5 minutes: {avg_over_5}")
+    print(f"Average Under 5 minutes: {avg_under_5}")
+    print(f"Average Over 10 minutes: {avg_over_10}")
+    print(f"Average Under 10 minutes: {avg_under_10}")
+
+    # Calculate the success rate of bets
+    success_rate_5 = df_betting['Over_5'].sum() / len(df_betting)
+    success_rate_10 = df_betting['Over_10'].sum() / len(df_betting)
+
+    print(f"Success rate for Over 5 minutes bets: {success_rate_5}")
+    print(f"Success rate for Over 10 minutes bets: {success_rate_10}")
+
+# Run simulation for each team in the main DataFrame
+for index, row in df_main.iterrows():
+    team = row['Team']
+    print(f"Simulating for team: {team}")
+    simulated_results = simulate_martingale()
+    print(f"Results for {team}: {simulated_results}")
+
+# Run simulation for each entry in the betting DataFrame
+for index, row in df_betting.iterrows():
+    game = row['Game']
+    print(f"Simulating for game: {game}")
+    simulated_results = simulate_martingale()
+    print(f"Results for {game}: {simulated_results}")
+
+# Analyze betting data
+analyze_betting_data(df_betting)
